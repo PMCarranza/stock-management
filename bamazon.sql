@@ -1,5 +1,5 @@
 -- drops the databse if already exists (I created one already in workbench, hopefully I have no issues).
-DROP DATABASE IF EXISTS bamazon;
+-- DROP DATABASE IF EXISTS bamazon;
 
 -- creates the database products
 CREATE DATABASE bamazon;
@@ -20,33 +20,33 @@ CREATE TABLE products(
 -- populating the 'database' with products
 
 INSERT INTO products(item_id, product_name, department_name, price, stock_quantity)
-VALUES (1, 'wooden bat', 'sports', 10, 100);
+VALUES (1, 'wooden bat', 'sports', 45.50, 10);
 
 INSERT INTO products(item_id, product_name, department_name, price, stock_quantity)
-VALUES (2, 'mitt', 'sports', 15, 75);
+VALUES (2, 'mitt', 'sports', 70.00, 15);
 
 INSERT INTO products(item_id, product_name, department_name, price, stock_quantity)
-VALUES (3, 'gas grill', 'outdoors', 5, 400);
+VALUES (3, 'gas grill', 'outdoors', 425.75, 5);
 
 INSERT INTO products(item_id, product_name, department_name, price, stock_quantity)
-VALUES (4, 'dress shirt', "men's apparel", 8, 50);
+VALUES (4, 'dress shirt', "men's apparel", 39.99, 8);
 
 INSERT INTO products(item_id, product_name, department_name, price, stock_quantity)
-VALUES (5, 'dress', "woman's apparel", 7, 70);
+VALUES (5, 'dress', "woman's apparel", 72.25, 9);
 
 INSERT INTO products(item_id, product_name, department_name, price, stock_quantity)
-VALUES (6, 'bicycle', 'outdoors', 4, 90);
+VALUES (6, 'bicycle', 'outdoors', 103.25, 7);
 
 INSERT INTO products(item_id, product_name, department_name, price, stock_quantity)
-VALUES (7, 'lawn mower', 'garden', 2, 350);
+VALUES (7, 'lawn mower', 'garden', 315.00, 4);
 
 INSERT INTO products(item_id, product_name, department_name, price, stock_quantity)
-VALUES (8, 'dress pants', "men's apparel", 8, 80);
+VALUES (8, 'dress pants', "men's apparel", 24.75, 6);
 
 INSERT INTO products(item_id, product_name, department_name, price, stock_quantity)
-VALUES (9, 'blouse', "women's apparel", 9, 75);
+VALUES (9, 'blouse', "women's apparel", 59.99, 12);
 
 INSERT INTO products(item_id, product_name, department_name, price, stock_quantity)
-VALUES (10, 'lawn chairs', "garden", 9, 55);
+VALUES (10, 'lawn chairs', "garden", 49.25, 8);
 
 SELECT * FROM products;
