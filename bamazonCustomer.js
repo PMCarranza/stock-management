@@ -93,8 +93,8 @@ var purchase = function () {
                 // console.log('res ', res);
                 console.log('');
                 console.log('**********************************************');
-                // console.log('THIS IS THE UPDATED TABLE');
-                // displayTable();
+                console.log('THIS IS THE UPDATED TABLE');
+                displayTable();
                 // connection.end();
                 // return;
                 reStart();
