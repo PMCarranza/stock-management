@@ -8,49 +8,47 @@ var connection = mysql.createConnection({
     port: 3306,
     user: 'root',
     password: 'password',
-    database: 'products'
+    database: 'bamazon'
 });
 
 connection.connect(function (err) {
     console.log('Connected as id: ' + connection.threadId);
+    console.log('');
 
-    // console.log('Welcome to bamazon! \n Would you like to browse the selection and choose something to buy?');
-
-    // // displaying the products table
-    // displayTable();
-
-    // calling purchase function
-    purchase();
-    // start();
+    start();
 });
 
 // function asking if user wants to see the catalog and shop
-// var start = function () {
-//     inquirer.prompt([
-//         {
-//             type: 'confirm',
-//             name: 'shopping',
-//             message: 'Welcome to bamazon! \n Would you like to browse the selection and choose something to buy?'
-//         }]
-//     );
-//     if (shopping){
-//         purchase();
-//     } else {
-//         console.log('= = = = = = = = = = G O O D  B Y E! = = = = = = = = = =')
-//     }
-// };
+var start = function () {
+    inquirer.prompt([
+        {
+            type: 'confirm',
+            name: 'shopping',
+            message: '                + + + + + +  WELCOME TO BAMAZON! + + + + + + \n\n Would you like to browse the selection and choose something to buy?'
+        }]
+    ).then(function (bridge) {
+        if (bridge.shopping) {
+            displayTable();
+            // purchase();
+        } else {
+            console.log('= = = = = = = = = = G O O D  B Y E! = = = = = = = = = =')
+            connection.end();
+            return;
+
+        };
+    })
+};
 
 // function for selecting and ordering products from the db
 var purchase = function () {
 
     // displaying the products table
-    // displayTable();
     // user being asked to choose item id and qty
     inquirer.prompt([
         {
             type: 'input',
             name: 'itemId',
-            message: 'Please enter the item_id you would like to buy '
+            message: 'Please enter the item_id of the product you would like to buy today '
         },
         {
             type: 'number',
@@ -64,63 +62,74 @@ var purchase = function () {
                 }
             }
         }
-        // {
-        //     type: 'confirm',
-        //     name: 'confirmation',
-        //     message: 'Would you like to continue shopping'
 
-        // }
     ]).then(function (processing) {
-        // checking if there is enough stock to fulfill order;
-        if (processing.quantity > stock_quantity) {
-            console.log('Unfortunately we do not have enough stock to fulfill your request =(');
-        } else {
-            // update table and process purchase
-            updateStock();
-            totalPurchase();
-        };
+        // passing the value of stock_quantity to varible stock
+        var stock = 'SELECT stock_quantity, price FROM products WHERE ?';
+        var stockUpdate = 'UPDATE products SET stock_quantity = ? WHERE ?';
 
-        // call function to update the stock
-        // after update call function to show the user the total cost of the purchase
-        // call function to ask if the users wants to keep shopping
+        var remainingStock;
+        connection.query(stock, { item_id: processing.itemId }, function (err, res) {
+            // console.log('stock qty', res[0].stock_quantity);
+            remainingStock = res[0].stock_quantity - processing.quantity;
+            // console.log('remaining', remainingStock);
+            if (processing.quantity > res[0].stock_quantity || processing.quantity > res[0].stock_quantity=== 0){
+                console.log('We apologize, we do not have enough stock at the moment to fulfill your request :(');
+                connection.end();
+                return;
+            }else if (err) throw err;
+            // console.log('price', res[0].price);
+            // console.log('proc qty', processing.quantity);
+            var amountToPay = parseFloat(res[0].price) * parseFloat(processing.quantity);
+            console.log('');
+            console.log('==================================================');
+            console.log('The number of items you ordered is ' + processing.quantity);
+            console.log('Your total for this transaction is $' + amountToPay);
+            console.log("Thank you for shopping with us today, we appreciate your business! =)");
+            console.log('==================================================');
+            console.log('');
+            connection.query(stockUpdate, [remainingStock, {item_id: processing.itemId}], function (err, res) {
+                if (err) throw err;
+                // console.log('res ', res);
+                console.log('');
+                console.log('**********************************************');
+                // console.log('THIS IS THE UPDATED TABLE');
+                // displayTable();
+                // connection.end();
+                // return;
+                reStart();
+            });
+        })
+    });
+};
+// // function to print table
+function displayTable() {
+    connection.query('SELECT * FROM products', function (err, res) {
+        if (err) throw err;
+        console.log('\n\n');
+        console.table(res);
+        console.log('');
+        purchase();
     });
 };
 
-// // function to print table
-// function displayTable() {
-//     connection.query('SELECT * FROM products', function (err, res) {
-//         if (err) throw err;
-//         console.table(res);
-//         connection.end();
-//     });
-// };
+// function asking if user wants another transaction
+var reStart = function () {
+    inquirer.prompt([
+        {
+            type: 'confirm',
+            name: 'shopagain',
+            message: 'Would you like to take a look at something else?'
+        }]
+    ).then(function (bridgeTwo) {
+        if (bridgeTwo.shopagain) {
+            displayTable();
+            // purchase();
+        } else {
+            console.log('= = = = = = = = = = G O O D  B Y E! = = = = = = = = = =')
+            connection.end();
+            return;
 
-// function to update stock
-function updateStock() {
-    // declaring a variable to pass the value of of the connection request and its parameters
-    var query = connection.query(
-        // columns and rows to update 
-        'UPDATE products SET ? WHERE?',
-        [
-            {
-                stock_quantity: stock_quantity - quantity
-            },
-            {
-                product_name: itemId,
-            }
-        ],
-        // this function will throw an error or display the affected rows
-        function (err, res) {
-            if (err) throw err;
-            console.log(res.affectedRows + 'Processing Order!');
         }
-    );
-    // query requesting data or information from a database table or combination of tables.
-    console.log(query.sql);
+    })
 };
-// function to show total cost, mostly place holders for now
-function totalPurchase() {
-    var amountToPay = processing.quantity * price;
-    console.log('Your total for this transaction is $' + amountToPay);
-};
-// function to ask if user wants to keep shopping.
