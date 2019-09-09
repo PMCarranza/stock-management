@@ -92,12 +92,10 @@ var purchase = function () {
                 if (err) throw err;
                 // console.log('res ', res);
                 console.log('');
-                console.log('**********************************************');
-                console.log('THIS IS THE UPDATED TABLE');
-                displayTable();
-                // connection.end();
-                // return;
-                reStart();
+                // console.log('**********************************************');
+                // console.log('THIS IS THE UPDATED TABLE');
+                // displayTable();
+                goAgain();
             });
         })
     });
@@ -114,7 +112,8 @@ function displayTable() {
 };
 
 // function asking if user wants another transaction
-var reStart = function () {
+// variable named changed from reStart to goAgain b/c the 're' part was italic
+var goAgain = function () {
     inquirer.prompt([
         {
             type: 'confirm',
@@ -124,8 +123,8 @@ var reStart = function () {
     ).then(function (bridgeTwo) {
         if (bridgeTwo.shopagain) {
             displayTable();
-            // purchase();
         } else {
+            console.log('\n');
             console.log('= = = = = = = = = = G O O D  B Y E! = = = = = = = = = =')
             connection.end();
             return;
