@@ -10,8 +10,7 @@ var connection = mysql.createConnection({
 });
 
 connection.connect(function (err) {
-    console.log('Connected as id: ' + connection.threadId);
-
+    // console.log('Connected as id: ' + connection.threadId);
     start();
 });
 
@@ -22,21 +21,16 @@ var start = function () {
         message: 'What do you need to do?',
         choices: ['View Products for Sale', 'View low Inventory', 'Add to Inventory', 'Add new product']
     }]).then(function (managerTask) {
-        console.log('choice was --> ', managerTask.task);
+        // console.log('choice was --> ', managerTask.task);
         if (managerTask.task === 'View Products for Sale') {
             forSale();
         } else if (managerTask.task === 'View low Inventory') {
             lowInventory();
         } else if (managerTask.task === 'Add to Inventory') {
             addInventory();
-            // console.log('===============  YOU HAVE UPDATED THE STOCK ===============');
         } else {
-            console.log('\n');
-            console.log('===============  Add products to the inventory  ===============');
-            // newProduct();
+            newProduct();
         }
-        // connection.end();
-        // return;
     });
 };
 
@@ -48,6 +42,8 @@ function forSale() {
         console.log('               ========== THESE ARE THE PRODUCTS FOR SALE  ==========')
         console.table(res);
         console.log('\n');
+        console.log('\n');
+        whatElse();
     });
 };
 
@@ -61,58 +57,115 @@ function lowInventory() {
         console.log('   ==========  THESE ITEMS HAVE LOW QUANTITIES LEFT IN INVENTORY  ==========');
         console.table(res);
         console.log('\n');
-
+        whatElse();
     });
 };
 
+// function to add/update the inventory quantity
+
 function addInventory() {
-    // an iquirer prompt is needed to have the users add to the quantities of the already existing products
-    // use UPDATE to pass the input into the DB
     inquirer.prompt([
         {
             type: 'input',
-            name: 'product_name',
-            message: 'What product needs updating?'
+            name: 'productName',
+            message: 'Which product do you need to update?'
         },
         {
             type: 'number',
-            name: 'stockQuantity',
-            message: 'What is the new quantity?'
-            // validate: function (value) {
-            //     if (isNaN(value) === false) {
-            //         return true;
-            //     } else {
-            //         return false;
-            //     }
-            // }
+            name: 'stockQty',
+            message: 'What is the new stock quantity'
         }
     ]).then(function (updating) {
-        var stock = 'UPDATE products SET stock_quantity ? WHERE ?';
-
-        connection.query(stock, { stock_quantity: updating.stockQuantity }, function (err, res) {
-            console.log('err--> ', err);
-            // console.log('new stock# --> ', stockUpdate);
-            // console.log('query--> ', query);
-            console.log('res--> ', res);
-            // newStockQty = res;
-            // console.log('newStockQty --> ', newStockQty);
-            if (err) throw err;
-            console.log('err--> ', err);
-            // console.log(res.affectedRows + " products updated!\n");
-        }
-        [
-            {
-                stock_quantity: updating.stock_quantity
-            },
-            {
-                product_name: updating.product_name
+        var query = connection.query(
+            "UPDATE products SET ? WHERE ?",
+            [
+                {
+                    stock_quantity: updating.stockQty
+                },
+                {
+                    product_name: updating.productName
+                }
+            ],
+            function (err, res) {
+                if (err) throw err;
+                console.log('\n');
+                // console.log('error--> ', err);
+                console.log('===============  YOU HAVE UPDATED THE FOLLOWING ===============');
+                // console.table(res);
+                console.log('\n');
+                // console.log('res --> ', res);
+                console.log('You updated the column for: ' + updating.productName + '\n' + 'The new quantity is: ' + updating.stockQty);
+                console.log('\n');
+                whatElse();
             }
-        ]
         );
         // logs the actual query being run
-        // console.log(query.sql);
+        // console.log('query--> ', query.sql);
     })
 };
 
-// console.log('first stock# --> ', stock);
-// console.log('first new stock# --> ', stockUpdate);
+function newProduct() {
+    inquirer.prompt([
+        {
+            type: 'input',
+            name: 'newProdName',
+            message: 'What is the new product name: '
+        },
+        {
+            type: 'input',
+            name: 'newDept',
+            message: 'To what department does this belong?: '
+        },
+        {
+            type: 'decimal',
+            name: 'newProdPrice',
+            message: 'What is the selling price?: '
+        },
+        {
+            name: 'input',
+            name: 'newProdQty',
+            message: 'How many are there available?: '
+        }
+
+    ]).then(function (addNew) {
+        var query = connection.query(
+            'INSERT INTO products SET ?',
+            [
+                {
+                    product_name: addNew.newProdName,
+                    department_name: addNew.newDept,
+                    price: addNew.newProdPrice,
+                    stock_quantity: addNew.newProdQty
+                }
+            ],
+            function (err, res) {
+                if (err) throw err;
+                // console.table(res);
+                console.log('\n');
+                // console.log('res --> ', res);
+                console.log('You updated the column for: ' + addNew.newProdName + '\n' + 'The new quantity is: ' + addNew.newProdQty);
+                console.log('The deparment affected is : ' + addNew.newDept + '\n' + 'The price for the new product is: ' + addNew.newProdPrice);
+                console.log('\n');
+                whatElse();
+            }
+        );
+    });
+};
+
+whatElse = function () {
+    inquirer.prompt([{
+        type: 'confirm',
+        name: 'action',
+        message: 'Is there anything else you need to do?'
+    }]
+    ).then(function (taskToDo) {
+        if (taskToDo.action) {
+            start();
+        } else {
+            console.log('\n');
+            console.log('= = = = = = = = = = KEEP UP THE GOOD WORK! = = = = = = = = = =');
+            console.log('\n');
+            connection.end();
+        }
+    })
+};

@@ -125,7 +125,7 @@ var goAgain = function () {
             displayTable();
         } else {
             console.log('\n');
-            console.log('= = = = = = = = = = G O O D  B Y E! = = = = = = = = = =')
+            console.log('= = = = = = = = = = G O O D  B Y E! = = = = = = = = = =');
             connection.end();
             return;
 
