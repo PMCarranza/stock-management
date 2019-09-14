@@ -68,7 +68,17 @@ function addInventory() {
         {
             type: 'input',
             name: 'productName',
-            message: 'Which product do you need to update?'
+            message: 'Which product do you need to update?',
+            validate: function (value) {
+                if (isNaN(value)) {
+                    return true;
+                } else {
+                    console.log('\n');
+                    console.log('Please use the product name, not numbers, Thanks!');
+                    console.log('\n');
+                    return false;
+                }
+            }
         },
         {
             type: 'number',
@@ -169,3 +179,8 @@ whatElse = function () {
         }
     })
 };
+
+
+console.log('\n');
+                    console.log('Please use the product name to update it, thanks');
+                    console.log('\n');

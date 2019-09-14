@@ -75,7 +75,10 @@ var purchase = function () {
             // console.log('remaining', remainingStock);
             if (processing.quantity > res[0].stock_quantity || processing.quantity > res[0].stock_quantity=== 0){
                 console.log('We apologize, we do not have enough stock at the moment to fulfill your request :(');
-                connection.end();
+                console.log('\n');
+                console.log('Please select a different quantity or a different item, Thanks!');
+                console.log('\n');
+                purchase();
                 return;
             }else if (err) throw err;
             // console.log('price', res[0].price);
