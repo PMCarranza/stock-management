@@ -109,8 +109,6 @@ function addInventory() {
                 whatElse();
             }
         );
-        // logs the actual query being run
-        // console.log('query--> ', query.sql);
     })
 };
 
@@ -119,7 +117,8 @@ function newProduct() {
         {
             type: 'input',
             name: 'newProdName',
-            message: 'What is the new product name: '
+            message: 'What is the new product name: ',
+            
         },
         {
             type: 'input',
@@ -179,8 +178,3 @@ whatElse = function () {
         }
     })
 };
-
-
-console.log('\n');
-                    console.log('Please use the product name to update it, thanks');
-                    console.log('\n');

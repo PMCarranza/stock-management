@@ -31,7 +31,11 @@ var start = function () {
             displayTable();
             // purchase();
         } else {
-            console.log('= = = = = = = = = = G O O D  B Y E! = = = = = = = = = =')
+            console.log('\n');
+            console.log('= = = = S E E  Y O U  N E X T  T I M E !  = = = =')
+            console.log('\n')
+            console.log('= = = = = = = = = = G O O D  B Y E! = = = = = = = = = =');
+            console.log('\n');
             connection.end();
             return;
 
@@ -128,7 +132,10 @@ var goAgain = function () {
             displayTable();
         } else {
             console.log('\n');
-            console.log('= = = = = = = = = = G O O D  B Y E! = = = = = = = = = =');
+            console.log('= = = = THANK YOU FOR YOUR BUSINESS !  = = = =')
+            console.log('\n')
+            console.log('= = = = = = = = = = S E E  Y O U  N E X T  T I M E ! = = = = = = = = = =');
+            console.log('\n');
             connection.end();
             return;
 
