@@ -1,7 +1,7 @@
 # **Stock Management**
 
 # **Description**
-This is a back-end application that simulates amazon.com in a very small scale.  The app will take in orders from customers and deplete stock from the store's inventory.  the app serves two purposes so far, the first is to fullfill customers request for the purchase of x item and allows a manager to updated the inventory.
+This is a back-end application simulates amazon.com in a very small scale.  The app will take in orders from customers and deplete stock from the store's inventory.  the app serves two purposes so far, the first is to fullfill customers request for the purchase of x item and allows a manager to updated the inventory.
 
 ## **User = Customer**
 
